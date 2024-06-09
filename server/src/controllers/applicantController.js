@@ -1,5 +1,7 @@
 const { generateToken } = require("../middlewares/jwtMiddleware");
 const { Applicant } = require("../models/ApplicantModels");
+const Job=require("../models/JobModels");
+
 
 const registerApplicant = async (req, res) => {
   try {
@@ -80,4 +82,22 @@ const loginApplicant = async (req, res) => {
   }
 };
 
-module.exports = { registerApplicant,loginApplicant };
+
+const applyForJob=async(req,res)=>{
+  try {
+    const {id,isEmployer}=req.user;
+    const jobId=req.params.jobId;
+    if(isEmployer)
+      throw Error("Unauthorized Access!! Employers cannot apply.");
+    const job=await Job.findOneAndUpdate({_id:jobId},{$push:{applicants:{applicant:id}}},{new:true});
+    if(!job){
+      throw Error("Can not apply for the job");
+    }
+    return res.status(201).json({message:"Applied for job successfully."});
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error." });
+  }
+}
+
+module.exports = { registerApplicant,loginApplicant,applyForJob};

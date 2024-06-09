@@ -30,11 +30,11 @@ const jobSchema = new Schema({
     required: true
   },
   responsibilities: {
-    type: [String],
+    type: String,
     required: true
   },
   requirements: {
-    type: [String],
+    type: String,
     required: true
   },
   CTC: {
@@ -50,7 +50,7 @@ const jobSchema = new Schema({
     type: Number,
     validate: {
       validator: function(value) {
-        return this.jobType !== 'internship' || value != null;
+        return this.jobType === 'internship' || value != null;
       },
       message: 'Stipend is required for internships'
     }
@@ -61,12 +61,21 @@ const jobSchema = new Schema({
   },
   jobVisibility: {
     type:String,
-    enum:['private','public']
+    enum:['private','public'],
+    default:'public'
   },
   applicants: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Applicant',
-    select: false // This field will not be included in query results by default
+    applicant:{
+      type: Schema.Types.ObjectId,
+      ref: 'Applicant',
+      select: false // This field will not be included in query results by default
+    },
+    appliedTime:{
+      type:Date,
+      default:Date.now
+    },
+    // type: Schema.Types.ObjectId,
+    // ref: 'Applicant',
   }]
 });
 

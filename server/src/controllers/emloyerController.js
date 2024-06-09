@@ -12,7 +12,7 @@ const registerEmployer = async (req, res) => {
 
     const payload = {
       id: new_employer.id,
-      isEmployer: false,
+      isEmployer: true,
     };
 
     const access_token = generateToken(payload);
@@ -43,7 +43,7 @@ const loginEmployer = async (req, res) => {
   try {
     const data = req.body;
     const userData = await CompanyDetails.findOne({
-      'employer.email': data.identification,
+      "employer.email": data.identification,
     });
 
     console.log(userData);
@@ -52,7 +52,7 @@ const loginEmployer = async (req, res) => {
     }
     const payload = {
       id: userData.id,
-      isEmployer: false,
+      isEmployer: true,
     };
 
     const access_token = generateToken(payload);
@@ -77,5 +77,30 @@ const loginEmployer = async (req, res) => {
   }
 };
 
+const registerOrUpdateCompany = async (req, res) => {
+  try {
+    const loggedInUser = req.user.id;
+    if (req.user.isEmployer) {
+      const data = req.body;
+      const company = await CompanyDetails.findOneAndUpdate(
+        { _id: loggedInUser },
+        data,
+        { new: true, runValidators: true }
+      );
+      console.log(company);
+      if (company) {
+        return res.status(200).json({ message: "Data updated successfully" });
+      } else {
+        throw Error("Employer Details not found.");
+      }
+    } else {
+      throw Error("Authorization declined!! You are not an employer.");
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error." });
+  }
+};
 
-module.exports = { loginEmployer,registerEmployer };
+
+module.exports = { loginEmployer, registerEmployer, registerOrUpdateCompany };

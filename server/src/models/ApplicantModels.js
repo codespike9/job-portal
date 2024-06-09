@@ -12,7 +12,7 @@ const applicantSchema=new mongoose.Schema({
         unique:true
     },
     mobile_no: {
-        type: Number,
+        type: String,
         required: true,
         unique:true
     },

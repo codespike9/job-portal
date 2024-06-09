@@ -17,7 +17,7 @@ const comapanyDetailsSchema=new mongoose.Schema({
             required:true
         }
     },
-    comapanyName:{
+    companyName:{
         type:String
     },
     companyDescription:{
@@ -38,19 +38,17 @@ const comapanyDetailsSchema=new mongoose.Schema({
     reviews:{
         type:[String]
     },
-    benifits:{
+    benefits:{
         type:[String]
     },
     profileVisibility:{
         type:String,
         enum:['private','public']
     },
-    jobs:{
-        type:[{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:'Applicant',
-        }]
-    }
+    jobs : [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Job'
+    }]
 });
 
 comapanyDetailsSchema.pre('save',async function(next){

@@ -2,7 +2,7 @@ const jwt=require('jsonwebtoken');
 
 class Jwt{
 
-    jwtAuthMiddleware=(req,res,next)=>{
+    verifyAccessToken=(req,res,next)=>{
 
         const authorization=req.headers.authorization
         if(!authorization)
@@ -15,6 +15,7 @@ class Jwt{
         try {
             const decoded=jwt.verify(token,process.env.JWT_SECRET);
             req.user=decoded;
+            console.log(decoded);
             next();
         } catch (error) {
             console.error(error);
