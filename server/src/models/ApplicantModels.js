@@ -87,7 +87,6 @@ applicantSchema.methods.comparePassword=async function(candidatePassword){
         // console.log(candidatePassword)
         // console.log(this.username);
         const isMatch=await bcrypt.compare(candidatePassword,this.password);
-        console.log(isMatch);
         return isMatch;
     }
     catch(error){

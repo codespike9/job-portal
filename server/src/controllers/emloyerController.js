@@ -1,24 +1,22 @@
 const { generateToken } = require("../middlewares/jwtMiddleware");
-const { Applicant } = require("../models/ApplicantModels");
+const CompanyDetails = require("../models/CompanyDetailsModels");
 
-const registerApplicant = async (req, res) => {
+const registerEmployer = async (req, res) => {
   try {
-    const { email, mobile_no, password, name, address } = req.body;
-    const new_applicant = await Applicant.create({
-      email,
-      mobile_no,
-      password,
-      name,
-      address,
-    });
+    const { name, email, password } = req.body;
+    const new_employer = new CompanyDetails();
+    new_employer.employer.name = name;
+    new_employer.employer.email = email;
+    new_employer.employer.password = password;
+    await new_employer.save();
 
     const payload = {
-      id: new_applicant.id,
+      id: new_employer.id,
       isEmployer: false,
     };
 
     const access_token = generateToken(payload);
-    if (new_applicant && access_token) {
+    if (new_employer && access_token) {
       res.cookie("access_token", access_token, {
         httpOnly: true,
         secure: true,
@@ -28,9 +26,8 @@ const registerApplicant = async (req, res) => {
       return res.status(201).json({
         access_token: access_token,
         user: {
-          username: new_applicant.name,
-          email: new_applicant.email,
-          mobile_no: new_applicant.mobile_no,
+          username: new_employer.employer.name,
+          email: new_employer.employer.email,
         },
         message: "Registration successfull!!",
       });
@@ -41,14 +38,15 @@ const registerApplicant = async (req, res) => {
     console.error(error);
   }
 };
-const loginApplicant = async (req, res) => {
+
+const loginEmployer = async (req, res) => {
   try {
     const data = req.body;
-    const userData = await Applicant.findOne({
-      $or: [{ mobile_no: data.identification }, { email: data.identification }],
+    const userData = await CompanyDetails.findOne({
+      'employer.email': data.identification,
     });
 
-
+    console.log(userData);
     if (!userData || !(await userData.comparePassword(data.password))) {
       return res.status(401).json({ error: "Invalid username or password" });
     }
@@ -69,9 +67,8 @@ const loginApplicant = async (req, res) => {
     return res.status(201).json({
       access_token: access_token,
       user: {
-        username: userData.name,
-        email: userData.email,
-        mobile_no: userData.mobile_no,
+        username: userData.employer.name,
+        email: userData.employer.email,
       },
       message: "Login successful!!",
     });
@@ -80,4 +77,5 @@ const loginApplicant = async (req, res) => {
   }
 };
 
-module.exports = { registerApplicant,loginApplicant };
+
+module.exports = { loginEmployer,registerEmployer };

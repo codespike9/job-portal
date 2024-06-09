@@ -1,4 +1,5 @@
 const mongoose=require('mongoose');
+const bcrypt=require('bcrypt');
 
 const comapanyDetailsSchema=new mongoose.Schema({
     employer:{
@@ -27,7 +28,6 @@ const comapanyDetailsSchema=new mongoose.Schema({
     location:{type:String},
     domainOfWork:{
         type:String,
-        required:true
     },
     images:{
         type:[String]
@@ -56,7 +56,7 @@ const comapanyDetailsSchema=new mongoose.Schema({
 comapanyDetailsSchema.pre('save',async function(next){
     const user=this;
 
-    if(!user.isModified(this.employer.password))
+    if(!user.isModified('employer.password'))
         return next();
     try{
         //hash password generation
@@ -65,6 +65,7 @@ comapanyDetailsSchema.pre('save',async function(next){
         // hash password
         const hashedPassword=await bcrypt.hash(user.employer.password,salt);
         user.employer.password=hashedPassword;
+        console.log(hashedPassword);
         next();
     }catch(error){
         console.log(error);
@@ -74,8 +75,9 @@ comapanyDetailsSchema.pre('save',async function(next){
 comapanyDetailsSchema.methods.comparePassword=async function(candidatePassword){
     try{
         // console.log(candidatePassword)
-        // console.log(this.username);
+        // console.log(this.employer.password);
         const isMatch=await bcrypt.compare(candidatePassword,this.employer.password);
+        console.log(isMatch)
         return isMatch;
     }
     catch(error){
