@@ -3,6 +3,7 @@ const bodyParser=require("body-parser");
 const cookieParser=require("cookie-parser");
 const cors=require("cors");
 
+const apiRouter=require("./routes/apiRouter");
 const app=express();
 
 app.use(cors({
@@ -13,5 +14,7 @@ app.use(cors({
 app.use(express.static("public"));
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+app.use('/api',apiRouter);
 
 module.exports=app;

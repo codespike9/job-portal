@@ -20,19 +20,19 @@ const applicantSchema=new mongoose.Schema({
         type:String,
         required:true
     },
+    avatar:{
+        type:String
+    },
     education:[
         {
             instituteName:{
                 type:String,
-                required:true
             },
             degree:{
                 type:String,
-                required:true
             },
             passingYear:{
                 type:String,
-                required:true
             }
         }
     ],
@@ -43,11 +43,9 @@ const applicantSchema=new mongoose.Schema({
         {
             projectTitle:{
                 type:String,
-                required:true
             },
             projectDescription:{
                 type:String,
-                required:true
             },
             startingDate:{
                 type:Date
@@ -89,6 +87,7 @@ applicantSchema.methods.comparePassword=async function(candidatePassword){
         // console.log(candidatePassword)
         // console.log(this.username);
         const isMatch=await bcrypt.compare(candidatePassword,this.password);
+        console.log(isMatch);
         return isMatch;
     }
     catch(error){

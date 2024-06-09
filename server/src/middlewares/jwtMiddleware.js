@@ -23,13 +23,17 @@ class Jwt{
     }
     
     generateToken=(userData)=>{
-    
-        const jwtToken=jwt.sign(userData,process.env.JWT_SECRET,{expiresIn:process.env.JWT_EXPIRE});
-        return jwtToken;
+        
+        try {
+            const jwtToken=jwt.sign(userData,process.env.JWT_SECRET,{expiresIn:process.env.JWT_EXPIRE});
+            return jwtToken;       
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     logRequest = (req, res, next) => {
-        console.log(`[${new Date().toLocaleString()}] Request made to: ${req.originalUrl}`);
+        console.log(`[${new Date().toLocaleString()}] ${req.method} Request made to: ${req.originalUrl}`);
         next();
     }
 }
