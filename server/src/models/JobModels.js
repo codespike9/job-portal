@@ -68,7 +68,6 @@ const jobSchema = new Schema({
     applicant:{
       type: Schema.Types.ObjectId,
       ref: 'Applicant',
-      select: false // This field will not be included in query results by default
     },
     appliedTime:{
       type:Date,
