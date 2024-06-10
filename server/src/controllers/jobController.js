@@ -50,6 +50,7 @@ const deleteJob=async(req,res)=>{
     if(isEmployer){
       const jobId=req.params.jobId;
       await Job.findOneAndDelete({_id:jobId,company:id});
+      const company=await CompanyDetails.findOneAndUpdate({_id:id},{$pull:{jobs:jobId}});
       return res.status(200).json({ message: "Job details updated successfully successfully!" });
     }
     return res.status(403).json({ message: "Invalid permissions." });
@@ -89,26 +90,49 @@ const getApplicantsList = async (req, res) => {
     if (!job) {
       return res.status(404).json({ message: "Job not found." });
     }
+
     const applicant_list = await Promise.all(job.applicants.map(async (curr) => {
-      const applicant_detail = await Applicant.findById(curr.applicant);
-      console.log(applicant_detail);
-      if (applicant_detail) {
-        applicant_detail.appliedTime = curr.appliedTime;
-        return applicant_detail;
+      try {
+        const applicant_detail = await Applicant.findById(curr.applicant).lean();
+        if (applicant_detail) {
+          applicant_detail.appliedTime = curr.appliedTime;
+          
+          return {...applicant_detail,appliedTime:curr.appliedTime};
+        }
+        return null;
+      } catch (err) {
+        console.error(`Error fetching applicant ${curr.applicant}:`, err);
+        return null;
       }
-      return null;
     }));
 
+    const filtered_applicant_list = applicant_list.filter(applicant => applicant !== null);
+
     const job_details = {
-      applicant_list: applicant_list, // Filter out null values if any
+      applicant_list: filtered_applicant_list,
       job_details: job
     };
 
     return res.status(200).json(job_details);
   } catch (error) {
-    console.error(error);
+    console.error('Internal server error:', error);
     return res.status(500).json({ message: "Internal server error." });
   }
 }
 
-module.exports={createJob,getAllJobs,getApplicantsList,updateJobDetails,deleteJob}
+
+async function appliedJobs (req, res) {
+  try {
+      const { id } = req.user;
+      const jobs = await Job.find({ "applicants.applicant" : id }, {applicants: 0});
+      if (jobs) {
+          return res.status(200).json({ "Applied Jobs" : jobs });
+      } else {
+          return res.status(400).json({ "message" : "Some error occurred!" });
+      }
+  } catch (error) {
+      return res.status(400).json({ "message" : error.message });
+  }
+}
+
+module.exports={createJob,getAllJobs,getApplicantsList,updateJobDetails,deleteJob,appliedJobs}
