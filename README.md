@@ -8,7 +8,7 @@ A job board with features for recruiters to add their company and post jobs unde
 3. [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
     - [Installation Steps](#installation)
-5. [Documentation](#documentation)
+4. [Documentation](#documentation)
 
 
 ## Tech Stack
@@ -49,16 +49,15 @@ A job board with features for recruiters to add their company and post jobs unde
 - Enter into server folder using ( cd server )
 - run command ( npm install ) in terminal
 - Create a .env file inside server
--   PORT=8000
-    MONGODB_USER=dharmarajjena694
-    MONGODB_PASSWORD=glosity-silicon
-    MONGODB_CLUSTER=cluster0.9hi2hqu.mongodb.net
-    MONGODB_DATABASE=JobPortal
-    CORS_ORIGIN=*
-    JWT_SECRET=1234
-    JWT_EXPIRE=4d
-
-    put the above in .env
+-       PORT=8000
+-       MONGODB_USER=dharmarajjena694
+-       MONGODB_PASSWORD=glosity-silicon
+-       MONGODB_CLUSTER=cluster0.9hi2hqu.mongodb.net
+-       MONGODB_DATABASE=JobPortal
+-       CORS_ORIGIN=*
+-       JWT_SECRET=1234
+-       JWT_EXPIRE=4d
+- put the above in .env
 - run the server using command ( npm run dev )
 - Add a new terminal
 - Enter into client
@@ -68,5 +67,42 @@ A job board with features for recruiters to add their company and post jobs unde
 
 ## Documentation
 
-## EndPoints
--
+### EndPoints
+#### Employer Endpoints
+    -POST http://localhost:8000/api/employer-registration  
+        For recruiters registration
+    -POST http://localhost:8000/api/employer-login
+        For recruiters login
+    -PUT http://localhost:8000/api/add-company
+        For add and updating company details
+    -GET http://localhost:8000/api/view-applicants/:jobId
+        For accessing applicants list for a particular job
+    -POST http://localhost:8000/api/add-job
+        For creating jobs under company
+    -GET http://localhost:8000/api/get-jobs
+        For accessing the jobs list
+    -PUT http://localhost:8000/api/update-job-details/:jobId
+        For updating job details
+    -DELETE http://localhost:8000/api/delete-job/:jobId
+        For deleting job details
+    -GET http://localhost:8000/api/applied-jobs
+        For accessing applied jobs, applicant specific( authroized end point for applicant only)
+
+#### Applicant Endpoints
+    -POST http://localhost:8000/api/user-registration
+        For applicant registration
+    -POST http://localhost:8000/api/user-login
+        For applicant login
+    -PUT http://localhost:8000/api/apply/:jobId
+        For applying for a job
+    -PUT http://localhost:8000/api/update-profile
+        For updating user profiles
+    -GET http://localhost:8000/api/view-profile
+        For accessing profile details
+    -POST http://localhost:8000/api/profile/education/add
+        For adding education details
+    -PUT http://localhost:8000/api/profile/education/:educationId/update
+        For updating education details
+    -DELETE http://localhost:8000/api/profile/education/:educationId/delete
+        For deleting an education details
+
