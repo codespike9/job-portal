@@ -45,9 +45,11 @@ A job board with features for recruiters to add their company and post jobs unde
 - MongoDB installed and running
 
 ### Installation
-- Clone the repository
-- Enter into server folder using ( cd server )
-- run command ( npm install ) in terminal
+- Clone the repository and type these commands
+-     git clone https://github.com/codespike9/job-portal.git
+-     cd git-portal
+-     cd server
+-     npm install
 - Create a .env file inside server
 -       PORT=8000
 -       MONGODB_USER=dharmarajjena694
@@ -58,11 +60,13 @@ A job board with features for recruiters to add their company and post jobs unde
 -       JWT_SECRET=1234
 -       JWT_EXPIRE=4d
 - put the above in .env
-- run the server using command ( npm run dev )
+- run the server using command
+-     npm run dev
 - Add a new terminal
 - Enter into client
-- run command npm install
-- npm run dev
+- run command
+-     npm install
+-     npm run dev
 - make sure that port 8000 and 5173 are free
 
 ## Documentation
